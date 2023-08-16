@@ -14,7 +14,34 @@ const nfts = JSON.parse(
 )
 
 // console.log(nfts)
+// GET METHOD
+app.get('/api/v1/nfts', (req,res) => {res.json({
+    status:'success',
+    results: nfts.length,
+    data:{nfts}
+})})
 
+
+// POST METHOD
+app.post('/api/v1/nfts', (req,res) => {
+
+    // console.log(req)
+
+    const newId = nfts[nfts.length - 1].id + 1;
+    const newNFTs = Object.assign({id:newId},req.body)
+
+    nfts.push(newNFTs)
+
+    fs.writeFile(`${__dirname}/nft-data/data/nft-simple.json`, JSON.stringify(nfts), err => {
+        res.status(201).json({
+            status:'success',
+    nfts: newNFTs
+        })
+    })
+
+
+    // res.send('POST NFTS')
+})
 
 
 
