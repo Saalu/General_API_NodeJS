@@ -1,70 +1,80 @@
 const fs = require('fs')
-
+const NFT = require('../model/nftModel')
 
 const nfts = JSON.parse(fs.readFileSync(`${__dirname}/../nft-data/data/nft-simple.json`))
 
-// GET METHOD
-exports.getAllNtfs = (req,res) => {res.json({
-    status:'success',
-    results: nfts.length,
-    data:{nfts}
-})}
-// GET SINGLE METHOD
-exports.getSingle =  (req,res) => {   
-    const id = req.params.id * 1
-    
-    if(id > nfts.length){
-        return res.status(404).json({
-            status:'fail',
-            message: 'Invalid ID'
-        })
-    }
-
-    const nft = nfts.find(el => el.id ===id )
-    res.json({
-    status:'success',
-    data:{nft}
-})}
-// POST METHOD
-exports.createNtf = (req,res) => {
-    const newId = nfts[nfts.length - 1].id + 1;
-    const newNFTs = Object.assign({id: newId}, req.body)
-
-    nfts.push(newNFTs)
-
-    fs.writeFile(`${__dirname}/../nft-data/data/nft-simple.json`, JSON.stringify(nfts), err => {
+// GET METHOD ======================
+exports.getAllNtfs =async (req,res) => {
+    try {
+       const nft = await NFT.find()
+     
         res.status(201).json({
             status:'success',
-            nft: newNFTs
+            result: nft.length,
+            data: nft
         })
-    })
-    // res.send('POST NFTS')
+        
+    } catch (err) {
+    res.status(500).json({msg:err.message})
+    }
 }
+// GET SINGLE METHOD
+exports.getSingle =  async (req,res) => {
+    try {
+       const nft = await NFT.findById(req.params.id)
+     
+        res.status(201).json({
+            status:'success',
+            // result: nft.length,
+            data: nft
+        })
+        
+    } catch (err) {
+        res.status(500).json({status:'failed', msg:err.message})
+
+    }}
+// POST METHOD ======================
+exports.createNtf = async(req,res) => {
+   try {
+    const newNFT = await NFT.create(req.body)
+    // console.log(newNFT)
+    res.status(201).json({
+        status:'success',
+        nft: newNFT
+    })
+    
+} catch (err) {
+res.status(500).json({msg:err.message})
+}
+}
+
 // UPDATE METHOD
-exports.updateNtf = (req,res) => {   
+exports.updateNtf = async(req,res) => {   
 
-    if( req.params.id * 1 > nfts.length){
-        return res.status(404).json({
-            status:'fail',
-            message: 'Invalid ID'
+    try {
+
+        const nft = await NFT.findByIdAndUpdate(req.params.id, req.body,{new:true, runValidators:true})
+        
+        res.json({
+            status:'success',
+            data:nft
         })
+    } catch (err) {
+res.status(500).json({status:'failed', msg:err.message})
+        
     }
 
-    res.json({
-    status:'success',
-    data:"Updating nft"
-})}
+   }
 // DELETE METHOD
-exports.deleteNtf = (req,res) => {   
+exports.deleteNtf = async(req,res) => {   
 
-    if( req.params.id * 1 > nfts.length){
-        return res.status(404).json({
-            status:'fail',
-            message: 'Invalid ID'
+    try {
+         await NFT.findByIdAndDelete(req.params.id)
+        res.json({
+            status:'success',
+            msg: 'Deleted nft',
         })
-    }
-
-    res.status(404).json({
-    status:'success',
-    data:null
-})}
+    } catch (err) {
+res.status(500).json({status:'failed', msg:err.message})
+        
+    }}
