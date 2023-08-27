@@ -3,19 +3,19 @@ import './form.css';
 import { useDispatch, useSelector } from 'react-redux';
 // import { update, remove } from '../../redux/userSlice';
 import { updateUser } from '../../redux/apiCalls';
+import { updateUser2 } from '../../redux/userSlice';
 
 const FormComponent = () => {
 const [name, setName] = useState('');
 const [email, setEmail] = useState('');
 
-const user = useSelector(state => state.user.userInfo)
+const {userInfo} = useSelector(state => state.user)
 const dispatch = useDispatch()
 
 
   const handleUpdate = (e) => {
     e.preventDefault()
-    updateUser({name,email}, dispatch)
-
+dispatch(updateUser2({name,email}))
   }
 
   const handleDelete = (e) =>{
@@ -27,7 +27,7 @@ const dispatch = useDispatch()
   return (
     <div className="form">
         <div className="delete-account">
-          This is account belongs to <span>{user.name}</span>. Hello, you're welcome <span>{user.name}</span>.
+          This is account belongs to <span>{userInfo.name}</span>. Hello, you're welcome <span>{userInfo.name}</span>.
            Space untmpore corrupti voluptates, qui, sequi commodi magni delectus praesentium libero
            nisi voluptatum.
        <div >
@@ -43,7 +43,7 @@ const dispatch = useDispatch()
           <input
             type="text"
             // value={user.name}
-            placeholder={user.name}
+            placeholder={userInfo.name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -52,7 +52,7 @@ const dispatch = useDispatch()
           <input
             type="email"
             // value={user.email}
-            placeholder={user.email}
+            placeholder={userInfo.email}
 
             onChange={(e) => setEmail(e.target.value)}
           />

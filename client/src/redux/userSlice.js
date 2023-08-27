@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios'
 
+export const updateUser2 = createAsyncThunk('users/update', async(user) =>{
+  const res  = await axios.post('https://jsonplaceholder.typicode.com/users', user)
+       
+  return res.data
+})
 
 
 export const userSlice = createSlice({
@@ -13,21 +19,37 @@ export const userSlice = createSlice({
     pending: false,
     error: false,
     },
-  
-    reducers: {
-        updateStart: (state,action) =>{
-            state.pending = true
-        },
-        updateSuccess: (state,action) => {
-            state.pending = false,
-            state.userInfo= action.payload
-        },
-        updateError: (state,action) =>{
-            state.pending = false,
-            state.error = true
-        },
-        
-    },
+
+    // =====================Custom============//
+    // reducers: {
+    //     updateStart: (state,action) =>{
+    //         state.pending = true
+    //     },
+    //     updateSuccess: (state,action) => {
+    //         state.pending = false,
+    //         state.userInfo= action.payload
+    //     },
+    //     updateError: (state,action) =>{
+    //         state.pending = false,
+    //         state.error = true
+    //     },   
+    // },
+
+    extraReducers:{
+      [updateUser2.pending]: (state) =>{
+        state.pending = true
+        state.error = false
+      },
+      [updateUser2.fulfilled]: (state,action) =>{
+        state.pending = false
+        state.userInfo = action.payload
+      },
+      [updateUser2.rejected]: (state) =>{
+        state.pending = null,
+        state.error = true
+      },
+    }
+    // =====================Extra============//
     // extraReducers: (builder) => {
     //   builder.addCase(fetchUsers.fulfilled, (state, action) => {
     //     state.entities = action.payload.users
