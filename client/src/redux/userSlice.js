@@ -5,19 +5,27 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-      user:{
+      userInfo:{
         name: 'Admin',
         email: 'saalu@teck.com'
       }
-    },
+      ,
     pending: false,
     error: false,
+    },
+  
     reducers: {
-        update: (state,action) =>{
-            state.name = action.payload.name
-            state.email = action.payload.email
+        updateStart: (state,action) =>{
+            state.pending = true
         },
-        remove: (state) => state = {}
+        updateSuccess: (state,action) => {
+            state.pending = false,
+            state.userInfo= action.payload
+        },
+        updateError: (state,action) =>{
+            state.pending = false,
+            state.error = true
+        },
         
     },
     // extraReducers: (builder) => {
@@ -29,6 +37,6 @@ export const userSlice = createSlice({
   })
 
 
-  export const {update,remove} = userSlice.actions
+  export const {updateStart,updateSuccess,updateError} = userSlice.actions
 
   export default userSlice.reducer

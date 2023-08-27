@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 const Sidebar = ({ activeItem, onItemClick }) => {
   
-  const name = useSelector(state => state.user.name)
+  const name = useSelector(state => state.user.userInfo.name)
   const sidebarItems = [
     { id: 1, label: 'Home', icon: '🏠' },
     { id: 2, label: 'Profile', icon: '👤' },

@@ -1,35 +1,34 @@
 import React, { useState } from 'react';
 import './form.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { update, remove } from '../../redux/userSlice';
+// import { update, remove } from '../../redux/userSlice';
+import { updateUser } from '../../redux/apiCalls';
 
 const FormComponent = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+const [name, setName] = useState('');
+const [email, setEmail] = useState('');
 
-const user = useSelector(state => state.user)
+const user = useSelector(state => state.user.userInfo)
 const dispatch = useDispatch()
 
 
   const handleUpdate = (e) => {
     e.preventDefault()
-
-    console.log(name,email)
-    dispatch(update({name,email}))
-
+    updateUser({name,email}, dispatch)
 
   }
 
   const handleDelete = (e) =>{
     e.preventDefault()
 
-    dispatch(remove())
+    // dispatch(remove())
   }
 
   return (
     <div className="form">
         <div className="delete-account">
-          This is account belongs to <span>{user.name}</span>. Hello, you're welcome <span>{user.name}</span>. Space untmpore corrupti voluptates, qui, sequi commodi magni delectus praesentium libero
+          This is account belongs to <span>{user.name}</span>. Hello, you're welcome <span>{user.name}</span>.
+           Space untmpore corrupti voluptates, qui, sequi commodi magni delectus praesentium libero
            nisi voluptatum.
        <div >
        <button className='btn delete' onClick={handleDelete}>Delete</button>

@@ -3,7 +3,7 @@ import './Navbar.css'; // Import your CSS file for styling
 import { useSelector } from 'react-redux';
 
 const Navbar = () => {
-const name = useSelector(state => state.user.name)
+const name = useSelector(state => state.user.userInfo.name)
 
   return (
     <nav className="navbar">
